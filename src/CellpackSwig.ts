@@ -9,10 +9,24 @@ import * as Stream from "stream" // because Microb Response
 
 export default class CellpackSwig extends Cellpack {
 
-    request(connection: Connection){
-        // if(this.config.is('debug')) Swig.invalidateCache()
+    private envInitialized: boolean = false
 
-        // Swig.setExtension('dump', this.templateDump)
+    initTemplateEnvironment(): void {
+        if(this.envInitialized) return
+        this.envInitialized = true
+
+        //
+        if(this.environment.get('debug')) Swig.setExtension('dump', (data: any) => { return this.templateDump(data) })
+    }
+
+    private templateDump(data: any): string {
+        return JSON.stringify(data)
+    }
+
+    request(connection: Connection){
+        if(this.environment.get('debug')) Swig.invalidateCache()
+
+        this.initTemplateEnvironment()
 
         let template = connection.environment.get('template')
         if(Loadash.isString(template)){
