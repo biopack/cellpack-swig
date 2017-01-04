@@ -10,7 +10,7 @@ export declare class Swig {
 
     setFilter(
         name: string,
-        method: (input: any, ...args: any[]) => string
+        method: (input: any, ...args: any[]) => any
     ): void;
     setTag(
         name: string,
@@ -134,7 +134,7 @@ export declare function setDefaults(options: SwigOptions): void;
 export declare function setDefaultTZOffset(offset: number): void;
 export declare function setFilter(
     name: string,
-    method: (input: any, ...args: any[]) => string
+    method: (input: any, ...args: any[]) => any
 ): void;
 export declare function setTag(
     name: string,
