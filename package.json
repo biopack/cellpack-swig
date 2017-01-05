@@ -1,6 +1,6 @@
 {
   "name": "cellpack-swig",
-  "version": "1.0.0-alpha.8",
+  "version": "1.0.0-alpha.9",
   "description": "Module for Microb web framework integrated Swig template engine",
   "keywords": [
       "Microb","mvc","framework","web","server","swig"

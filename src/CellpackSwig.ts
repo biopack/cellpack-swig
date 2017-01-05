@@ -11,6 +11,11 @@ export default class CellpackSwig extends Cellpack {
 
     private envInitialized: boolean = false
 
+    init(){
+        this.config = this.environment.get("cellpacks")["cellpack-swig"]
+        return Promise.resolve()
+    }
+
     initTemplateEnvironment(): void {
         if(this.envInitialized) return
         this.envInitialized = true
@@ -19,19 +24,34 @@ export default class CellpackSwig extends Cellpack {
         let templateFilters = this.environment.get('template.filters',[])
 
         // defaults
-        Swig.setDefaults({
+        let defaults: any = {
             locals: {
                 now: () => { return new Date() },
                 time: () => { return Math.round((new Date()).getTime()/1000) },
                 rand: (from: number, to?: number) => { if(Lodash.isUndefined(to)){ from = 0; to = from; } return Math.floor((Math.random() * to) + from)  }
             }
+        }
+
+        if(Lodash.isObject(this.config.globals)){
+            Object.keys(this.config.globals).forEach((key: string,index: number, arr: Array<string>) => {
+                defaults.locals[key] = this.config.globals[key]
+            })
+        }
+
+        if(this.environment.get('debug')) this.transmitter.emit("log.cellpack.swig",`Loading Functions:`)
+        templateFunctions.forEach((func: any, index: number, arr: Array<string>) => {
+            if(this.environment.get('debug')) this.transmitter.emit("log.cellpack.swig",`\t + ${func.name}`)
+            defaults.locals[func.name] = func.func.bind(func.class)
         })
+        Swig.setDefaults(defaults)
+        if(this.environment.get('debug')) this.transmitter.emit("log.cellpack.swig",`done.`)
 
         // filters
         Swig.setFilter('split', (str: string, separator: string = ",") => {
             return str.split(separator)
         })
 
+        // environment filters
         if(this.environment.get('debug')) this.transmitter.emit("log.cellpack.swig",`Loading Filters:`)
         templateFilters.forEach((filter: any, index: number, arr: Array<string>) => {
             if(this.environment.get('debug')) this.transmitter.emit("log.cellpack.swig",`\t + ${filter.name}`)
