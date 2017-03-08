@@ -1,6 +1,6 @@
 {
   "name": "cellpack-swig",
-  "version": "1.0.0-alpha.9",
+  "version": "1.0.0-alpha.10",
   "description": "Module for Microb web framework integrated Swig template engine",
   "keywords": [
       "Microb","mvc","framework","web","server","swig"
@@ -15,7 +15,7 @@
   "main": "./lib/main.js",
   "types": "./types/main.d.ts",
   "scripts": {
-      "start": "gulp",
+      "build": "gulp",
       "watch": "gulp watch",
       "test": "echo \"Error: no test specified\" && exit 1"
   },

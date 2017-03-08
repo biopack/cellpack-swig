@@ -72,6 +72,14 @@ export default class CellpackSwig extends Cellpack {
 
         this.initTemplateEnvironment()
 
+        // request environment filters
+        let templateFilters = connection.environment.get('template.filters',[])
+        if(this.environment.get('debug')) this.transmitter.emit("log.cellpack.swig",`Loading Request Filters:`)
+        templateFilters.forEach((filter: any, index: number, arr: Array<string>) => {
+            if(this.environment.get('debug')) this.transmitter.emit("log.cellpack.swig",`\t + ${filter.name}`)
+            Swig.setFilter(filter.name, filter.func.bind(filter.class))
+        })
+
         let template = connection.environment.get('template')
         if(Lodash.isString(template)){
             let data = connection.environment.get('template.data')
