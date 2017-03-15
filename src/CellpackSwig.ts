@@ -84,6 +84,7 @@ export default class CellpackSwig extends Cellpack {
         if(Lodash.isString(template)){
             let data = connection.environment.get('template.data')
             connection.response.data = Swig.compileFile(`${appRoot}/.cache/templates/${template}`)(data)
+            connection.response.headers.set("Content-Type","text/html")
         }
 
         return Promise.resolve(true)
